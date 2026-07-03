@@ -1,0 +1,5 @@
+﻿<Solution>
+  <Project Path="LDOCE5ViewerX/LDOCE5ViewerX.csproj" />
+  <Project Path="LDOCE5ViewerXBenchmarks/LDOCE5ViewerXBenchmarks.csproj" />
+  <Project Path="LDOCE5ViewerXTests/LDOCE5ViewerXTests.csproj" />
+</Solution>

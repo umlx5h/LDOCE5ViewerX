@@ -1,0 +1,45 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LDOCE5ViewerX.ViewModels"
+        x:Class="LDOCE5ViewerX.Views.AdvancedSearchDialog"
+        x:DataType="vm:AdvancedSearchDialogViewModel"
+        Width="440"
+        Height="560"
+        MinWidth="440"
+        MinHeight="420"
+        Icon="/Assets/LDOCE5ViewerX.ico"
+        FontFamily="{StaticResource GlobalFont}"
+        Background="{DynamicResource DialogWindowBackgroundBrush}"
+        Title="Advanced Search">
+
+    <Grid RowDefinitions="*,Auto"
+          Margin="12"
+          RowSpacing="10">
+        <Border BorderBrush="{DynamicResource SystemControlForegroundChromeDisabledLowBrush}"
+                BorderThickness="1">
+            <TreeView ItemsSource="{Binding FilterNodes}">
+                <TreeView.ItemTemplate>
+                    <TreeDataTemplate DataType="vm:AdvancedSearchFilterNodeViewModel"
+                                      ItemsSource="{Binding Children}">
+                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                  Content="{Binding Label}"/>
+                    </TreeDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </Border>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto,Auto,Auto"
+              ColumnSpacing="8">
+            <Button Grid.Column="1"
+                    Command="{Binding CloseCommand}"
+                    Content="Close"/>
+            <Button Grid.Column="2"
+                    Command="{Binding ResetCommand}"
+                    Content="Reset"/>
+            <Button Grid.Column="3"
+                    Command="{Binding SearchCommand}"
+                    Content="Search"/>
+        </Grid>
+    </Grid>
+</Window>

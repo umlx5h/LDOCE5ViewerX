@@ -1,0 +1,56 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LDOCE5ViewerX.ViewModels"
+        x:Class="LDOCE5ViewerX.Views.IndexerDialog"
+        x:DataType="vm:IndexerDialogViewModel"
+        Width="560"
+        Height="430"
+        MinWidth="520"
+        MinHeight="360"
+        Icon="/Assets/LDOCE5ViewerX.ico"
+        FontFamily="{StaticResource GlobalFont}"
+        Background="{DynamicResource DialogWindowBackgroundBrush}"
+        Title="Create Index">
+    <Design.DataContext>
+        <vm:IndexerDialogViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          Margin="12"
+          RowSpacing="10">
+        <Grid ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="8">
+            <TextBlock VerticalAlignment="Center"
+                       Text="Data Location:"/>
+            <TextBox x:Name="PathTextBox"
+                     Grid.Column="1"
+                     IsReadOnly="True"
+                     Text="{Binding DataPath}"/>
+            <Button x:Name="BrowseButton"
+                    Grid.Column="2"
+                    Command="{Binding BrowseCommand}"
+                    Content="Browse..."/>
+        </Grid>
+
+        <TextBox x:Name="LogTextBox"
+                 Grid.Row="1"
+                 AcceptsReturn="True"
+                 IsReadOnly="True"
+                 Text="{Binding LogText}"
+                 TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,Auto,Auto"
+              ColumnSpacing="8">
+            <Button x:Name="CancelButton"
+                    Grid.Column="1"
+                    Command="{Binding CancelOrCloseCommand}"
+                    Content="{Binding CancelButtonText}"/>
+            <Button x:Name="RunButton"
+                    Grid.Column="2"
+                    Command="{Binding StartIndexingCommand}"
+                    Content="Start Indexing"/>
+        </Grid>
+    </Grid>
+</Window>

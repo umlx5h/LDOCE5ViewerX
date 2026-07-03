@@ -1,0 +1,390 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LDOCE5ViewerX.ViewModels"
+        xmlns:views="using:LDOCE5ViewerX.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="1100"
+        d:DesignHeight="720"
+        x:Class="LDOCE5ViewerX.Views.MainWindow"
+        x:Name="Root"
+        x:DataType="vm:MainWindowViewModel"
+        Width="1100"
+        Height="720"
+        MinWidth="760"
+        MinHeight="520"
+        Icon="/Assets/LDOCE5ViewerX.ico"
+        FontFamily="{Binding Config.ApplicationFontFamily}"
+        Title="{Binding WindowTitle}">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Alt+Left"
+                    Command="{Binding NavigateBackCommand}"/>
+        <KeyBinding Gesture="Alt+Right"
+                    Command="{Binding NavigateForwardCommand}"/>
+        <KeyBinding Gesture="Ctrl+S"
+                    Command="{Binding PlayCurrentPronunciationCommand}"/>
+        <KeyBinding Gesture="Ctrl+OemPlus"
+                    Command="{Binding ZoomInCommand}"/>
+        <KeyBinding Gesture="Ctrl+Add"
+                    Command="{Binding ZoomInCommand}"/>
+        <KeyBinding Gesture="Ctrl+OemMinus"
+                    Command="{Binding ZoomOutCommand}"/>
+        <KeyBinding Gesture="Ctrl+Subtract"
+                    Command="{Binding ZoomOutCommand}"/>
+        <KeyBinding Gesture="Ctrl+D0"
+                    Command="{Binding NormalSizeCommand}"/>
+        <KeyBinding Gesture="Ctrl+OemComma"
+                    Command="{Binding OpenSettingsCommand}"/>
+    </Window.KeyBindings>
+
+    <Window.Styles>
+        <Style Selector="Button.toolbar">
+            <Setter Property="MinWidth" Value="34"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="Button.toolbar:disabled PathIcon">
+            <Setter Property="Opacity" Value="0.30"/>
+        </Style>
+
+        <Style Selector="Button.primaryTool">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="Border.filterBadge">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="5,1"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="TextBlock.subtle">
+            <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForeground}"/>
+        </Style>
+
+        <Style Selector="Border.panel">
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundChromeDisabledLowBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Styles>
+
+    <DockPanel Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
+        <Menu x:Name="MainMenu"
+              DockPanel.Dock="Top">
+            <MenuItem Header="_Viewer">
+                <MenuItem Header="Recreate Index..." Click="OnCreateIndexClicked"/>
+                <MenuItem Header="Settings..."
+                          InputGesture="Ctrl+OemComma"
+                          Command="{Binding OpenSettingsCommand}"/>
+                <Separator/>
+                <MenuItem Header="Quit"
+                          Click="OnQuitClicked"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Copy"
+                          InputGesture="Ctrl+C"
+                          IsEnabled="{Binding CanCopyCurrentEntryWord}"
+                          Click="OnCopyClicked"/>
+                <MenuItem Header="Play Pronunciation"
+                          InputGesture="Ctrl+S"
+                          Command="{Binding PlayCurrentPronunciationCommand}"/>
+                <Separator/>
+                <MenuItem Header="Find..."
+                          InputGesture="Ctrl+F"
+                          Click="OnFindClicked"/>
+            </MenuItem>
+            <MenuItem Header="_Options">
+                <MenuItem Header="{Binding Config.ZoomInMenuHeader}"
+                          InputGesture="Ctrl+OemPlus"
+                          Command="{Binding ZoomInCommand}"/>
+                <MenuItem Header="{Binding Config.ZoomOutMenuHeader}"
+                          InputGesture="Ctrl+OemMinus"
+                          Command="{Binding ZoomOutCommand}"/>
+                <MenuItem Header="{Binding Config.NormalSizeMenuHeader}"
+                          InputGesture="Ctrl+D0"
+                          Command="{Binding NormalSizeCommand}"/>
+                <Separator/>
+                <MenuItem Header="Theme">
+                    <MenuItem Header="Automatic"
+                              ToggleType="Radio"
+                              GroupName="ThemeMode"
+                              IsChecked="{Binding Config.IsAutomaticThemeModeSelected, Mode=TwoWay}"/>
+                    <MenuItem Header="Light"
+                              ToggleType="Radio"
+                              GroupName="ThemeMode"
+                              IsChecked="{Binding Config.IsLightThemeModeSelected, Mode=TwoWay}"/>
+                    <MenuItem Header="Dark"
+                              ToggleType="Radio"
+                              GroupName="ThemeMode"
+                              IsChecked="{Binding Config.IsDarkThemeModeSelected, Mode=TwoWay}"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Monitor Clipboard"
+                          ToggleType="CheckBox"
+                          IsChecked="{Binding Config.IsClipboardMonitoringEnabled, Mode=TwoWay}"/>
+                <Separator/>
+                <MenuItem Header="Automatic Pronunciation"
+                          ToggleType="CheckBox"
+                          IsChecked="{Binding Config.IsAutoPronunciationPlaybackEnabled, Mode=TwoWay}"/>
+                <MenuItem Header="Pronunciation Language">
+                    <MenuItem Header="British English"
+                              ToggleType="Radio"
+                              GroupName="PronunciationPlayback"
+                              IsChecked="{Binding Config.IsBritishPronunciationPlaybackSelected, Mode=TwoWay}"/>
+                    <MenuItem Header="American English"
+                              ToggleType="Radio"
+                              GroupName="PronunciationPlayback"
+                              IsChecked="{Binding Config.IsAmericanPronunciationPlaybackSelected, Mode=TwoWay}"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="Help"
+                          InputGesture="F1"
+                          Click="OnHelpClicked"/>
+                <MenuItem Header="About"
+                          Command="{Binding ShowAboutCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <Border DockPanel.Dock="Top"
+                Padding="8"
+                BorderBrush="{DynamicResource SystemControlForegroundChromeDisabledLowBrush}"
+                BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto"
+                  RowDefinitions="Auto">
+                <Button Grid.Column="0"
+                        Classes="toolbar"
+                        Command="{Binding NavigateBackCommand}"
+                        ContextRequested="OnBackButtonContextRequested"
+                        ToolTip.Tip="Go Back">
+                    <PathIcon Width="16"
+                              Height="16"
+                              Data="{StaticResource arrow_left_regular}"/>
+                </Button>
+                <Button Grid.Column="1"
+                        Classes="toolbar"
+                        Margin="6,0,10,0"
+                        Command="{Binding NavigateForwardCommand}"
+                        ContextRequested="OnForwardButtonContextRequested"
+                        ToolTip.Tip="Go Forward">
+                    <PathIcon Width="16"
+                              Height="16"
+                              Data="{StaticResource arrow_right_regular}"/>
+                </Button>
+                <Grid Grid.Column="2">
+                    <TextBox x:Name="SearchTextBox"
+                             Height="32"
+                             PlaceholderText="Search..."
+                             Text="{Binding SearchText, Mode=TwoWay}"/>
+                    <Popup PlacementTarget="{Binding #SearchTextBox}"
+                           Placement="Bottom"
+                           IsOpen="{Binding IsSpellSuggestionPopupOpen, Mode=TwoWay}">
+                        <Border MinWidth="{Binding Bounds.Width, ElementName=SearchTextBox}"
+                                BorderBrush="{DynamicResource SystemControlForegroundChromeHighBrush}"
+                                BorderThickness="1">
+                            <ListBox x:Name="SpellSuggestionListBox"
+                                     ItemsSource="{Binding SpellSuggestions}"
+                                     BorderThickness="0"
+                                     PointerReleased="OnSpellSuggestionPointerReleased">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Border>
+                    </Popup>
+                </Grid>
+                <ComboBox Grid.Column="3"
+                          Width="150"
+                          Height="32"
+                          Margin="10,0,0,0"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding SearchModes}"
+                          SelectedItem="{Binding SelectedSearchMode, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SearchModeOption">
+                            <TextBlock Text="{Binding DisplayName}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Grid.Column="4"
+                        Classes="primaryTool"
+                        Margin="6,0,0,0"
+                        Content="Search"
+                        Command="{Binding RunModeSearchCommand}"/>
+                <Button Grid.Column="5"
+                        Classes="primaryTool"
+                        Margin="6,0,0,0"
+                        Click="OnAdvancedSearchClicked"
+                        ToolTip.Tip="Search filters. Active filters are shown with ON.">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="6"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="Advanced"/>
+                        <Border Classes="filterBadge"
+                                IsVisible="{Binding HasActiveSearchFilters}">
+                            <TextBlock FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"
+                                       Text="ON"/>
+                        </Border>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Grid x:Name="MainContentGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                    Classes="panel"
+                    BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="Auto,*">
+                    <Border Grid.Row="0"
+                            Padding="10,8"
+                            BorderBrush="{DynamicResource SystemControlForegroundChromeDisabledLowBrush}"
+                            BorderThickness="0,0,0,1">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock FontWeight="SemiBold"
+                                       Text="Results"/>
+                            <TextBlock Grid.Column="1"
+                                       Classes="subtle"
+                                       Text="{Binding ResultCountText}"/>
+                        </Grid>
+                    </Border>
+
+                    <ListBox x:Name="ResultsListBox"
+                             Grid.Row="1"
+                             ItemsSource="{Binding SearchResults}"
+                             SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                             SelectionChanged="OnResultsSelectionChanged"
+                             SelectionMode="Single"
+                             BorderThickness="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SearchResultItemViewModel">
+                                <Grid RowDefinitions="Auto,Auto"
+                                      Background="Transparent"
+                                      Margin="8,0">
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Copy"
+                                                      CommandParameter="{Binding}"
+                                                      Click="OnCopySearchResultClicked"/>
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <views:SearchResultLabelTextBlock
+                                            BaseFontSize="{Binding #Root.DataContext.Config.SearchListBaseFontSize}"
+                                            LabelRuns="{Binding LabelRuns}"
+                                            TextWrapping="Wrap"/>
+                                        <Border Grid.Column="1"
+                                                Margin="8,0,0,0"
+                                                Padding="6,1"
+                                                VerticalAlignment="Center"
+                                                CornerRadius="4"
+                                                BorderThickness="1"
+                                                BorderBrush="{DynamicResource SystemAccentColor}"
+                                                ToolTip.Tip="{Binding Kind}">
+                                            <TextBlock FontSize="{Binding #Root.DataContext.Config.SearchResultBadgeFontSize}"
+                                                                 Text="{Binding KindAbbreviation}"/>
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1"
+                                               Margin="0,4,0,0"
+                                               FontSize="{Binding #Root.DataContext.Config.SearchResultSnippetFontSize}"
+                                               IsVisible="{Binding HasDescription}"
+                                               TextWrapping="Wrap"
+                                               Text="{Binding Description}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="6,8,10,8"/>
+                            </Style>
+                        </ListBox.Styles>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1"
+                          ResizeDirection="Columns"/>
+
+            <Grid Grid.Column="2" RowDefinitions="Auto,*">
+                <Border x:Name="FindBar"
+                        Grid.Row="0"
+                        IsVisible="False"
+                        Padding="8"
+                        BorderBrush="{DynamicResource SystemControlForegroundChromeDisabledLowBrush}"
+                        BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
+                        <Button Grid.Column="0"
+                                Classes="toolbar"
+                                Click="OnFindCloseClicked"
+                                ToolTip.Tip="Close find bar">
+                            <PathIcon Width="12"
+                                      Height="12"
+                                      Data="{StaticResource dismiss_regular}"/>
+                        </Button>
+                        <TextBox x:Name="FindTextBox"
+                                 Grid.Column="1"
+                                 Width="250"
+                                 Height="30"
+                                 Margin="8,0"
+                                 PlaceholderText="Find in entry"
+                                 Text="{Binding FindText, Mode=TwoWay}"/>
+                        <Button Grid.Column="2"
+                                Classes="toolbar"
+                                Content="Previous"
+                                Click="OnFindPreviousClicked"/>
+                        <Button Grid.Column="3"
+                                Classes="toolbar"
+                                Margin="6,0,0,0"
+                                Content="Next"
+                                Click="OnFindNextClicked"/>
+                        <TextBlock Grid.Column="4"
+                                   Classes="subtle"
+                                   VerticalAlignment="Center"
+                                   Margin="10,0,0,0"
+                                   Text="{Binding FindStatus}"/>
+                    </Grid>
+                </Border>
+
+                <views:EntryDocumentView x:Name="EntryDocument"
+                                         Grid.Row="1"
+                                         Background="{DynamicResource DialogWindowBackgroundBrush}"
+                                         Document="{Binding ContentDocument}"
+                                         HighlightedAnchor="{Binding ContentAnchor}"
+                                         FindText="{Binding FindText, Mode=TwoWay}"
+                                         FindStatus="{Binding FindStatus, Mode=TwoWay}"
+                                         ZoomFactor="{Binding Config.ZoomFactor}"
+                                         BaseFontSize="{Binding Config.ContentBaseFontSize}"
+                                         IsExampleItalicEnabled="{Binding Config.IsExampleItalicEnabled}"
+                                         ExampleFontFamily="{Binding Config.ExampleFontFamily}"
+                                         WebSearchSites="{Binding Config.WebSearchSites}"
+                                         NavigateCommand="{Binding NavigateContentCommand}"
+                                         LookupCommand="{Binding LookupContentCommand}"
+                                         PlayAudioCommand="{Binding PlayAudioCommand}"/>
+
+            </Grid>
+        </Grid>
+    </DockPanel>
+
+</Window>

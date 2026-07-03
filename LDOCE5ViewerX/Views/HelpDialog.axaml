@@ -1,0 +1,83 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LDOCE5ViewerX.ViewModels"
+        x:Class="LDOCE5ViewerX.Views.HelpDialog"
+        x:DataType="vm:HelpDialogViewModel"
+        Width="560"
+        Height="620"
+        MinWidth="440"
+        MinHeight="420"
+        Icon="/Assets/LDOCE5ViewerX.ico"
+        FontFamily="{StaticResource GlobalFont}"
+        Background="{DynamicResource DialogWindowBackgroundBrush}"
+        Title="Help">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.groupTitle">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,8,0,6"/>
+        </Style>
+
+        <Style Selector="Border.shortcutKey">
+            <Setter Property="MinWidth" Value="140"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundChromeDisabledLowBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"/>
+        </Style>
+
+        <Style Selector="TextBlock.shortcutGesture">
+            <Setter Property="FontFamily" Value="{StaticResource MonoFont}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="TextBlock.shortcutDescription">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*,Auto"
+          Margin="14"
+          RowSpacing="12">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding ShortcutGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ShortcutGroupViewModel">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="groupTitle"
+                                       Text="{Binding Title}"/>
+                            <ItemsControl ItemsSource="{Binding Shortcuts}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ShortcutItemViewModel">
+                                        <Grid ColumnDefinitions="Auto,*"
+                                              ColumnSpacing="10"
+                                              Margin="0,3">
+                                            <Border Classes="shortcutKey">
+                                                <TextBlock Classes="shortcutGesture"
+                                                           Text="{Binding Gesture}"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1"
+                                                       Classes="shortcutDescription"
+                                                       Text="{Binding Description}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto">
+            <Button Grid.Column="1"
+                    Command="{Binding CloseCommand}"
+                    Content="Close"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="96"
+     height="96"
+     viewBox="0 0 96 96"
+     role="img"
+     aria-labelledby="title desc">
+    <title id="title">title</title>
+    <desc id="desc">desc</desc>
+
+    <defs>
+        <filter id="iconShadow" x="-20%" y="-15%" width="145%" height="145%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3.5"
+                          flood-color="#00092a" flood-opacity="0.28"/>
+        </filter>
+
+        <linearGradient id="blueBody"
+                        x1="12" y1="42" x2="84" y2="88"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#3b8df4"/>
+            <stop offset="1" stop-color="#1040bb"/>
+        </linearGradient>
+
+        <linearGradient id="yellowCover"
+                        x1="16" y1="8" x2="80" y2="40"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffed80"/>
+            <stop offset="1" stop-color="#ffb000"/>
+        </linearGradient>
+
+        <linearGradient id="redBand"
+                        x1="12" y1="36" x2="84" y2="46"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#f75050"/>
+            <stop offset="1" stop-color="#bd1a1a"/>
+        </linearGradient>
+
+        <linearGradient id="gloss"
+                        x1="15" y1="8" x2="60" y2="58"
+                        gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.32"/>
+            <stop offset="0.44" stop-color="#ffffff" stop-opacity="0.04"/>
+            <stop offset="1" stop-color="#000000" stop-opacity="0.10"/>
+        </linearGradient>
+
+    </defs>
+
+    <!-- Icon shapes with drop shadow -->
+    <g filter="url(#iconShadow)">
+        <rect x="12" y="8" width="72" height="80" rx="8" fill="url(#blueBody)"/>
+        <path d="M20 8H76C80.42 8 84 11.58 84 16V42H12V16C12 11.58 15.58 8 20 8Z"
+              fill="url(#yellowCover)"/>
+        <rect x="12" y="36" width="72" height="10" fill="url(#redBand)"/>
+    </g>
+
+    <!-- Diagonal gloss overlay -->
+    <rect x="12" y="8" width="72" height="80" rx="8" fill="url(#gloss)"/>
+
+    <!-- Inner highlight border -->
+    <rect x="12.5" y="8.5" width="71" height="79" rx="7.5" fill="none"
+          stroke="white" stroke-width="1" stroke-opacity="0.15"/>
+
+</svg>
