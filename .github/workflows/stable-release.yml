@@ -1,0 +1,76 @@
+name: Stable Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            runtime: win-x64
+            archive-name: LDOCE5ViewerX-${{ github.ref_name }}-win-x64.7z
+          - os: windows-latest
+            runtime: win-arm64
+            archive-name: LDOCE5ViewerX-${{ github.ref_name }}-win-arm64.7z
+          - os: ubuntu-latest
+            runtime: linux-x64
+            archive-name: LDOCE5ViewerX-${{ github.ref_name }}-linux-x64.AppImage
+          - os: ubuntu-24.04-arm
+            runtime: linux-arm64
+            archive-name: LDOCE5ViewerX-${{ github.ref_name }}-linux-arm64.AppImage
+          - os: macos-latest
+            runtime: osx-x64
+            archive-name: LDOCE5ViewerX-${{ github.ref_name }}-osx-x64.7z
+          - os: macos-latest
+            runtime: osx-arm64
+            archive-name: LDOCE5ViewerX-${{ github.ref_name }}-osx-arm64.7z
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Build & Package
+        uses: ./.github/actions/build-package
+        with:
+          archive-name: ${{ matrix.archive-name }}
+          runtime: ${{ matrix.runtime }}
+
+      - name: Upload packaged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.archive-name }}
+          path: ${{ matrix.archive-name }}
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download packaged artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create or update GitHub Draft Release & Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "${{ github.ref_name }}"
+          draft: true # created as draft, later published manually
+          prerelease: false
+          files: |
+            release-assets/*.7z
+            release-assets/*.AppImage
