@@ -1,0 +1,12 @@
+LDOCE5 Viewer X
+
+Copyright (c) 2026 umlx5h
+GNU General Public License version 3 or later
+
+LDOCE5 Viewer X is a C# / Avalonia rewrite of the original LDOCE5 Viewer.
+
+Original LDOCE5 Viewer:
+    by Taku Fukada
+    GNU General Public License version 3 or later
+
+    https://github.com/ciscorn/ldoce5viewer
