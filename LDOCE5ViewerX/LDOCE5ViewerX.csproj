@@ -6,13 +6,8 @@
         <Version>1.0.0</Version>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <ApplicationIcon>Assets\LDOCE5ViewerX.ico</ApplicationIcon>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Release' and '$(DisableAOT)' != 'true'">
         <PublishAot>true</PublishAot>
-        <PublishTrimmed>true</PublishTrimmed>
-        <TrimMode>full</TrimMode>
+        <ApplicationIcon>Assets\LDOCE5ViewerX.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
