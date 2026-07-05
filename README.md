@@ -40,9 +40,8 @@ For other systems and architectures, you can build it yourself.
    xattr -cr /Applications/LDOCE5\ Viewer\ X.app
    ```
 
-3. Prepare your dictionary data. This application does not include licensed
-   dictionary files, so copy the `ldoce5.data` folder from your purchased
-   [Longman Dictionary of Contemporary English 5th Edition DVD](https://www.amazon.com/dp/1408215330) to a local folder.
+3. Prepare the `ldoce5.data` folder from your purchased
+   [Longman Dictionary of Contemporary English 5th Edition DVD](https://www.amazon.com/dp/1408215330).
 
 4. Start LDOCE5 Viewer X. If no usable index exists, the `Create Index` dialog
    opens automatically. You can also open it later from
